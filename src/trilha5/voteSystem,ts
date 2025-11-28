@@ -1,0 +1,58 @@
+
+
+abstract class VoteSystem {
+    abstract voteFor(candidate: string): void;
+    abstract getResults(): object;
+}
+
+class Election extends VoteSystem {
+    private votes: Record<string, number> = {};
+
+    voteFor(candidate: string): void {
+        if (this.votes[candidate]) {
+            this.votes[candidate] += 1;
+        } else {
+            this.votes[candidate] = 1;
+        }
+    }
+
+    getResults(): object {
+        return { ...this.votes };
+    }
+}
+
+class Poll extends VoteSystem {
+    private votes: Record<string, number> = {};
+
+    voteFor(candidate: string): void {
+        if (this.votes[candidate]) {
+            this.votes[candidate] += 1;
+        } else {
+            this.votes[candidate] = 1;
+        }
+    }
+
+    getResults(): object {
+        
+        const sorted = Object.entries(this.votes)
+            .sort((a, b) => b[1] - a[1])
+            .reduce((acc, [candidate, count]) => {
+                acc[candidate] = count;
+                return acc;
+            }, {} as Record<string, number>);
+        return sorted;
+    }
+}
+
+
+const election = new Election();
+election.voteFor("Alice");
+election.voteFor("Bob");
+election.voteFor("Alice");
+console.log(election.getResults()); 
+
+const poll = new Poll();
+poll.voteFor("Alice");
+poll.voteFor("Bob");
+poll.voteFor("Alice");
+console.log(poll.getResults()); 
